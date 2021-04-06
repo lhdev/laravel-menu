@@ -40,7 +40,7 @@ class Builder
      *
      * @var array
      */
-    protected $reserved = ['route', 'action', 'url', 'prefix', 'parent', 'secure', 'raw'];
+    protected $reserved = ['route', 'action', 'url', 'prefix', 'parent', 'secure', 'raw', 'icon'];
 
     /**
      * Initializing the menu manager.

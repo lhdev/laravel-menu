@@ -51,6 +51,13 @@ class Item
     public $nickname;
 
     /**
+     * Item's icon class
+     *
+     * @var string
+     */
+    public $icon;
+
+    /**
      * Item's seprator from the rest of the items, if it has any.
      *
      * @var array
@@ -124,6 +131,7 @@ class Item
 
         $this->attributes = $this->builder->extractAttributes($options);
         $this->parent = (is_array($options) && isset($options['parent'])) ? $options['parent'] : null;
+        $this->icon = (is_array($options) && isset($options['icon'])) ? $options['icon'] : null;
 
         // Storing path options with each link instance.
         if (!is_array($options)) {
@@ -346,6 +354,16 @@ class Item
     public function parent()
     {
         return $this->builder->whereId($this->parent)->first();
+    }
+
+    public function hasIcon()
+    {
+        return isset($this->icon);
+    }
+
+    public function icon()
+    {
+        return $this->icon;
     }
 
     /**
