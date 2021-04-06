@@ -428,13 +428,17 @@ class Item
      *
      * @param Item $item
      * @param bool $recursion
+     * @param bool $is_parent
      */
-    public function activate(Item $item = null, $recursion = false)
+    public function activate(Item $item = null, $recursion = false, $is_parent = false)
     {
         $item = is_null($item) ? $this : $item;
 
         // Check to see which element should have class 'active' set.
-        if ('item' == $this->builder->conf('active_element')) {
+        if ($is_parent) {
+            $item->active(null, $is_parent);
+            $item->link->active();
+        } else if ('item' == $this->builder->conf('active_element')) {
             $item->active();
         } else {
             $item->link->active();
@@ -448,7 +452,7 @@ class Item
         if (true === $this->builder->conf('activate_parents')) {
             // Moving up through the parent nodes, activating them as well.
             if ($item->parent) {
-                $this->activate($this->builder->whereId($item->parent)->first(), true);
+                $this->activate($this->builder->whereId($item->parent)->first(), true, true);
             }
         }
     }
@@ -459,7 +463,7 @@ class Item
      * @param null|string $pattern
      * @return Item
      */
-    public function active($pattern = null)
+    public function active($pattern = null, $is_parent = false)
     {
         if (!is_null($pattern)) {
             $pattern = ltrim(preg_replace('/\/\*/', '(/.*)?', $pattern), '/');
@@ -470,7 +474,15 @@ class Item
             return $this;
         }
 
-        $this->attributes['class'] = Builder::formatGroupClass(array('class' => $this->builder->conf('active_class')), $this->attributes);
+        if ($is_parent)
+        {
+            $this->attributes['class'] = Builder::formatGroupClass(array('class' => $this->builder->conf('parent_active_class')), $this->attributes);
+        }
+        else {
+            $this->attributes['class'] = Builder::formatGroupClass(array('class' => $this->builder->conf('active_class')), $this->attributes);
+        }
+
+
         $this->isActive = true;
 
         return $this;

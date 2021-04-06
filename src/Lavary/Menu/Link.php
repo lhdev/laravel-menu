@@ -54,11 +54,20 @@ class Link
     /**
      * Make the anchor active.
      *
+     * @param bool $is_parent
+     *
      * @return Link
      */
-    public function active()
+    public function active($is_parent = false)
     {
-        $this->attributes['class'] = Builder::formatGroupClass(array('class' => $this->builder ? $this->builder->conf('active_class') : null), $this->attributes);
+        if ($is_parent)
+        {
+            $this->attributes['class'] = Builder::formatGroupClass(array('class' => $this->builder ? $this->builder->conf('parent_active_class') : null), $this->attributes);
+        }
+        else {
+            $this->attributes['class'] = Builder::formatGroupClass(array('class' => $this->builder ? $this->builder->conf('active_class') : null), $this->attributes);
+
+        }
         $this->isActive = true;
 
         return $this;
